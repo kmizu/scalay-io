@@ -18,12 +18,14 @@ class FileResource (path: String) {
   def isAbsolute: Boolean = file.isAbsolute()
   def isHidden: Boolean = file.isHidden()
 
-  def write (bytes: Array[Byte]): Unit = sys.error("not implemented yet")
-  def write (byte: Byte): Unit = write(Array(byte))
-  def write (string: String): Unit = write(string.getBytes()) //FIXME encoding should be passed
+  def writeBytes (bytes: Array[Byte]): Unit = sys.error("not implemented yet")
+  def writeBytes (byte: Byte): Unit = writeBytes(Array(byte))
+  def write(string: String): Unit = writeBytes(string.getBytes())
+  def write(string: String, encoding: String): Unit = writeBytes(string.getBytes(encoding))
 
   def readBytes(): Array[Byte] = sys.error("not implemented yet")
-  def read(): String = new String(readBytes()) //FIXME encoding should be passed
+  def read(): String = new String(readBytes())
+  def read(encoding: String): Unit = new String(readBytes(), encoding)
 
   def underlying(): JFile = file
 
