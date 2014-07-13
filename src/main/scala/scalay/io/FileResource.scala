@@ -1,6 +1,7 @@
 package scalay.io
 
-import java.io.{File => JFile}
+import java.io.{File => JFile, FileInputStream, InputStreamReader, BufferedReader}
+import java.io.Closeable
 
 /**
  * Created with IntelliJ IDEA.
@@ -25,6 +26,12 @@ class FileResource (path: String) {
   def readBytes(): Array[Byte] = sys.error("not implemented yet")
   def read(): String = new String(readBytes())
   def read(encoding: String): Unit = new String(readBytes(), encoding)
+
+  protected def open[A <: Closeable, B](resource: => A)(block: A=> B): B = try {
+    block(resource)
+  } finally {
+    resource.close()
+  }
 
   override def toString(): String = file.toString()
 }
