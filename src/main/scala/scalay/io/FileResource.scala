@@ -1,7 +1,6 @@
 package scalay.io
 
 import java.io.{File => JFile}
-import javax.swing.JFileChooser
 
 /**
  * Created with IntelliJ IDEA.
@@ -11,7 +10,7 @@ import javax.swing.JFileChooser
  * To change this template use File | Settings | File Templates.
  */
 class FileResource (path: String) {
-  private val file: JFile = new JFile(path)
+  private[this] val file: JFile = new JFile(path)
 
   def isDirectory: Boolean = file.isDirectory()
   def isFile: Boolean = file.isFile()
@@ -26,8 +25,6 @@ class FileResource (path: String) {
   def readBytes(): Array[Byte] = sys.error("not implemented yet")
   def read(): String = new String(readBytes())
   def read(encoding: String): Unit = new String(readBytes(), encoding)
-
-  def underlying(): JFile = file
 
   override def toString(): String = file.toString()
 }
