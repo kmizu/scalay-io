@@ -6,13 +6,16 @@ import java.io.{File => JFile, _}
 /**
  * @author Kota Mizushima
  */
-class FileResource (path: String) {
-  private[this] val file: JFile = new JFile(path)
+class FileResource private (val file: JFile) {
+  private def this(path: String) {
+    this(new JFile(path))
+  }
 
   def isDirectory: Boolean = file.isDirectory()
   def isFile: Boolean = file.isFile()
   def isAbsolute: Boolean = file.isAbsolute()
   def isHidden: Boolean = file.isHidden()
+  def createNewFile(): Boolean =  file.createNewFile()
 
   def writeBytes (bytes: Array[Byte]): Unit = {
     open(new BufferedOutputStream(new FileOutputStream(file))){stream =>
@@ -44,4 +47,14 @@ class FileResource (path: String) {
 
 object FileResource {
   def apply (path: String): FileResource = new FileResource(path)
+
+  def newTempFile(prefix: String, suffix: String): Option[FileResource] = {
+    val newFile = JFile.createTempFile(prefix, suffix)
+    if(newFile != null) Some(new FileResource(newFile)) else None
+  }
+
+  def newTempFile(prefix: String, suffix: String, dir: FileResource): Option[FileResource] = {
+    val newFile = JFile.createTempFile(prefix, suffix, dir.file)
+    if(newFile != null) Some(new FileResource(newFile)) else None
+  }
 }
